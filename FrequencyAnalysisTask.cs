@@ -1,8 +1,6 @@
 ﻿using NUnit.Framework.Constraints;
 using System.Collections.Generic;
 using System.Linq;
-using System.Diagnostics;
-using System.Security.Authentication.ExtendedProtection.Configuration;
 
 namespace TextAnalysis
 {
@@ -10,81 +8,64 @@ namespace TextAnalysis
     {
         public static Dictionary<string, string> GetMostFrequentNextWords(List<List<string>> text)
         {
-            var allNGramms = GetFrequentsyDict(text);
-            var result = GetTheMostFrequent(ref allNGramms);
+            var allNGrams = GetFrequentsyDict(text);
+            var result = GetTheMostFrequent(allNGrams);
             return result;
         }
 
-        private static List<(string, string, int)> GetFrequentsyDict(List<List<string>> text)
-        {
-            var result = new List<(string, string, int)>();
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
+        private static Dictionary<(string, string), int> GetFrequentsyDict(List<List<string>> text)
+        { 
+            Dictionary<(string, string), int> result = new Dictionary<(string, string), int>();
             foreach (var sentence in text)
             {
                 for (int i = 0; i < sentence.Count - 1; i++)
-                {
-                    string biGramKey = sentence[i];
-                    string value = sentence[i + 1];
-                    
-                    //Кортеж является ссылочным типом, поэтому Find вернет ссылку на кортеж и мы сможем поменять его значение
-                    var biGram = result.Find(x => x.Item1 == biGramKey && x.Item2 == value);
-                    //BiGram
-                    if (biGram != default((string, string, int)))
-                    {
-                        biGram.Item3++;
-                    }
-                    else
-                    {
-                        result.Add((biGramKey, value, 1));
-                    }
-                    //TriGram
+                { 
+                    var biGramKey = (sentence[i], sentence[i+1]);
+                    AddNGramIfNeed(biGramKey, ref result);
                     if (i < sentence.Count - 2)
                     {
-                        string triGramKey = sentence[i] + " " + sentence[i + 1];
-                        value = sentence[i + 2];
-                        var triGram = result.Find(x => x.Item1 == triGramKey && x.Item2 == value);
-                        if (triGram != default((string, string, int)))
-                        {
-                            triGram.Item3++;
-                        }
-                        else
-                        {
-                            result.Add((triGramKey, value, 1));
-                        }
+                        var triGramKey = ($"{sentence[i]} {sentence[i+1]}", sentence[i+2]);
+                        AddNGramIfNeed(triGramKey, ref result);
                     }
                 }
             }
-            sw.Stop();
-            string r = sw.Elapsed.ToString();
             return result;
         }
 
-
-        private static Dictionary<string, string> GetTheMostFrequent(ref List<(string, string, int)> allNGramm)
+        //На странице с заданием https://ulearn.me/course/basicprogramming/Praktika_Chastotnost_N_gramm__eb894d4d-5854-4684-898b-5480895685e5
+        //Я оставил коментарий по поводу замечания "Разрешено передавать через ref только примитивные типы."
+        //посмотри позже, может ответил кто-нибудь
+        private static void AddNGramIfNeed((string, string) nGramKey, ref Dictionary<(string, string), int> result)
         {
-            Dictionary<string, string> result = new Dictionary<string, string>();
-            foreach (var nGramm in allNGramm)
-            {
-                if (!result.ContainsKey(nGramm.Item1))
-                {
-                    var items = allNGramm.Where(x => x.Item1 == nGramm.Item1).ToArray();
-                    int maxFreq = items.Max(x => x.Item3);
-                    List<(string, string, int)> itemsWithOneFreq = items.Where(x => x.Item3 == maxFreq).ToList();
+            if (result.ContainsKey(nGramKey))
+                result[nGramKey]++;
+            else
+                result.Add(nGramKey, 1);
+        }
 
-                    var maxLex = itemsWithOneFreq[0];
-                    if (itemsWithOneFreq.Count > 1)
+        private static Dictionary<string, string> GetTheMostFrequent(Dictionary<(string, string), int> allNGram)
+        { 
+            Dictionary<string, string> result = new Dictionary<string, string>();
+            var groups = allNGram.GroupBy(x => x.Key.Item1).ToArray();
+            foreach (var group in groups)
+            {
+                int maxValue = group.Max( m => m.Value );
+                var mostFrequentNGrams = group.Where( w => w.Value == maxValue ).ToArray();
+                int resIndex = 0;
+                if (mostFrequentNGrams.Length > 1)
+                {
+                    for (int i = 0; i < mostFrequentNGrams.Length; i++)
                     {
-                        foreach (var item in itemsWithOneFreq)
-                        {
-                            if (string.CompareOrdinal(item.Item2, maxLex.Item2) < 0)
-                                maxLex = item;
-                        }
+                        string currNGramValue = mostFrequentNGrams[i].Key.Item2;
+                        if (string.CompareOrdinal(currNGramValue, mostFrequentNGrams[resIndex].Key.Item2) < 0)
+                            resIndex = i;
                     }
-                    result.Add(maxLex.Item1, maxLex.Item2);
                 }
+
+                result.Add(mostFrequentNGrams[resIndex].Key.Item1, mostFrequentNGrams[resIndex].Key.Item2);
             }
+
             return result;
         }
-   }
+    }
 }
