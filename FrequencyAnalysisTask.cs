@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Diagnostics;
+using System.Security.Authentication.ExtendedProtection.Configuration;
 
 namespace TextAnalysis
 {
@@ -21,32 +22,44 @@ namespace TextAnalysis
             sw.Start();
             foreach (var sentence in text)
             {
-                GetNGramm(2, sentence, ref result);
-                GetNGramm(3, sentence, ref result);
+                for (int i = 0; i < sentence.Count - 1; i++)
+                {
+                    string biGramKey = sentence[i];
+                    string value = sentence[i + 1];
+                    
+                    //Кортеж является ссылочным типом, поэтому Find вернет ссылку на кортеж и мы сможем поменять его значение
+                    var biGram = result.Find(x => x.Item1 == biGramKey && x.Item2 == value);
+                    //BiGram
+                    if (biGram != default((string, string, int)))
+                    {
+                        biGram.Item3++;
+                    }
+                    else
+                    {
+                        result.Add((biGramKey, value, 1));
+                    }
+                    //TriGram
+                    if (i < sentence.Count - 2)
+                    {
+                        string triGramKey = sentence[i] + " " + sentence[i + 1];
+                        value = sentence[i + 2];
+                        var triGram = result.Find(x => x.Item1 == triGramKey && x.Item2 == value);
+                        if (triGram != default((string, string, int)))
+                        {
+                            triGram.Item3++;
+                        }
+                        else
+                        {
+                            result.Add((triGramKey, value, 1));
+                        }
+                    }
+                }
             }
             sw.Stop();
             string r = sw.Elapsed.ToString();
             return result;
         }
 
-        private static void GetNGramm(int N, List<string> sentence, ref List<(string, string, int)> freqList) 
-        {
-            for (int i = 0; i < sentence.Count - N + 1; i++)
-            {
-                var slice = sentence.GetRange(i, N);
-                var key = string.Join(" ", slice.ToArray(), 0, N - 1);
-                string val = slice[slice.Count - 1];
-                var item = freqList.Where(x => x.Item1 == key && x.Item2 == val).ToArray();
-                if (item.Length > 0)
-                {
-                    item[0].Item3++;
-                }
-                else
-                {
-                    freqList.Add((key, val, 1));
-                }
-            }
-        }
 
         private static Dictionary<string, string> GetTheMostFrequent(ref List<(string, string, int)> allNGramm)
         {
