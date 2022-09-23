@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "e7f5d985-677d-4246-ba75-4bae24df38b5": {
+      "ProjectGuid": "e7f5d985-677d-4246-ba75-4bae24df38b5",
+      "DisplayName": "TextAnalysis",
+      "ColorIndex": 0
+    }
+  },
+  "NextColorIndex": 1
+}

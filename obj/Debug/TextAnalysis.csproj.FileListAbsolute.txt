@@ -1,0 +1,14 @@
+B:\Projects\Programming\C#\Lessons\ulearn\TextGenerator\bin\Debug\HarryPotterText.txt
+B:\Projects\Programming\C#\Lessons\ulearn\TextGenerator\bin\Debug\TextAnalysis.exe.config
+B:\Projects\Programming\C#\Lessons\ulearn\TextGenerator\bin\Debug\TextAnalysis.exe
+B:\Projects\Programming\C#\Lessons\ulearn\TextGenerator\bin\Debug\TextAnalysis.pdb
+B:\Projects\Programming\C#\Lessons\ulearn\TextGenerator\bin\Debug\nunit.framework.dll
+B:\Projects\Programming\C#\Lessons\ulearn\TextGenerator\bin\Debug\nunitlite.dll
+B:\Projects\Programming\C#\Lessons\ulearn\TextGenerator\obj\Debug\TextAnalysis.csproj.AssemblyReference.cache
+B:\Projects\Programming\C#\Lessons\ulearn\TextGenerator\obj\Debug\TextAnalysis.csproj.SuggestedBindingRedirects.cache
+B:\Projects\Programming\C#\Lessons\ulearn\TextGenerator\obj\Debug\TextAnalysis.Properties.Resources.resources
+B:\Projects\Programming\C#\Lessons\ulearn\TextGenerator\obj\Debug\TextAnalysis.csproj.GenerateResource.cache
+B:\Projects\Programming\C#\Lessons\ulearn\TextGenerator\obj\Debug\TextAnalysis.csproj.CoreCompileInputs.cache
+B:\Projects\Programming\C#\Lessons\ulearn\TextGenerator\obj\Debug\TextAnalysis.csproj.CopyComplete
+B:\Projects\Programming\C#\Lessons\ulearn\TextGenerator\obj\Debug\TextAnalysis.exe
+B:\Projects\Programming\C#\Lessons\ulearn\TextGenerator\obj\Debug\TextAnalysis.pdb
